@@ -1,4 +1,4 @@
-import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Image, Pressable, ScrollView, StyleSheet, Text, View, useAnimatedValue } from 'react-native'
 import React from 'react'
 import { Link, router } from 'expo-router'
 import NavBar from './components/nav_bar'
@@ -19,6 +19,7 @@ const MAX_HEIGHT2 = 202;
 
 const HomePage = () => {
     const scrollY = useSharedValue(0)
+    const blurIntencity = useAnimatedValue(0)
     const handleScroll = useAnimatedScrollHandler((event) => {
         scrollY.value = event.contentOffset.y;
     })
@@ -39,13 +40,14 @@ const HomePage = () => {
         return {height: height < MIN_HEIGHT2 ? MIN_HEIGHT2 : height}
     })
 
-    const titleOpacity = useAnimatedStyle(() => {
-        const backgroundColor = interpolateColor(
-            scrollY.value,
-            [0, 50],
-            ['transparent', '#fff']
-        )
-        return { backgroundColor }
+    const show = useAnimatedStyle(() => {
+        const height = MAX_HEIGHT2 - scrollY.value
+        return { opacity: height < MIN_HEIGHT ? 0 : 1  }
+    })
+
+    const hide = useAnimatedStyle(() => {
+        const height = MAX_HEIGHT2 - scrollY.value
+        return { opacity: height > MIN_HEIGHT ? 0 : 1  }
     })
 
     const titleOffset = useAnimatedStyle(() => {
@@ -62,9 +64,11 @@ const HomePage = () => {
         <View>
             <NavBar
             headerStyle={headerStyle}
-            titleOpacity={titleOpacity} 
+            show={show} 
+            hide={hide}
             titleOffset={titleOffset}
-            navHeight={navHeight}/>
+            navHeight={navHeight}
+            />
             <Animated.ScrollView onScroll={handleScroll} style={styles.content}>
                 {items.map((item, index) => {
                     return(

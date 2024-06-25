@@ -1,19 +1,22 @@
 import React from 'react'
 import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
+import { BlurView } from 'expo-blur';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { FontAwesome } from '@expo/vector-icons';
 import Animated from 'react-native-reanimated';
 
 
-const NavBar = ({headerStyle, titleOpacity, titleOffset, navHeight}) => {
+const NavBar = ({headerStyle, show, hide, titleOffset, navHeight}) => {
   return (
     <Animated.View style={[styles.container, navHeight]}>
+        <BlurView intensity={80} style={styles.absolute} />
         <Animated.View style={[styles.body, headerStyle]}>
         <View style={styles.header}>
             <AntDesign name="arrowleft" size={24} color="black" />
+            <Animated.Text style={[styles.miniTitle, hide]}>Title</Animated.Text>
             <AntDesign name="setting" size={24} color="black" />
         </View>
-        <Animated.Text style={[styles.title, titleOffset]}>Title</Animated.Text>
+        <Animated.Text style={[styles.title, titleOffset, show]}>Title</Animated.Text>
         <Animated.View style={[styles.searchBar]}>
             <AntDesign name="search1" size={14} color="black" />
             <TextInput placeholder='Search' style={styles.textInput}/>
@@ -28,15 +31,21 @@ export default NavBar
 
 
 const styles = StyleSheet.create({
+    absolute: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
+      },
     container: {
         position: 'absolute',
         width: '100%',
         zIndex: 1,
         height: 202,
         alignItems: 'stretch',
-        // justifyContent: 'flex-end',
-        backgroundColor: '#FFFFFFBF'
-
+        justifyContent: 'flex-end',
+        // backgroundColor: '#FFFFFFBF'
     },
     body: {
         height: 148,
@@ -52,7 +61,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: "center",
-        backgroundColor: '#fff'
+        // backgroundColor: '#fff'
     },
     title: {
         // transform: [{translateY: 44}],
@@ -64,6 +73,10 @@ const styles = StyleSheet.create({
         fontSize: 34,
         fontWeight: '700',
         zIndex: -1,
+    },
+    miniTitle: {
+        fontSize: 17,
+        fontWeight: 500
     },
     searchBar: {
         flexDirection: 'row',
