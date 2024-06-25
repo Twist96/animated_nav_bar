@@ -2,27 +2,25 @@ import React from 'react'
 import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { FontAwesome } from '@expo/vector-icons';
+import Animated from 'react-native-reanimated';
 
 
-const NavBar
- = () => {
+const NavBar = ({headerStyle, titleOpacity, titleOffset, navHeight}) => {
   return (
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, navHeight]}>
+        <Animated.View style={[styles.body, headerStyle]}>
         <View style={styles.header}>
             <AntDesign name="arrowleft" size={24} color="black" />
             <AntDesign name="setting" size={24} color="black" />
         </View>
-        <Text style={styles.title}>Title</Text>
-        <View style={styles.searchBar}>
+        <Animated.Text style={[styles.title, titleOffset]}>Title</Animated.Text>
+        <Animated.View style={[styles.searchBar]}>
             <AntDesign name="search1" size={14} color="black" />
             <TextInput placeholder='Search' style={styles.textInput}/>
             <FontAwesome name="microphone" size={14} color="black" />
-        </View>
-
-        <ScrollView>
-            
-        </ScrollView>
-    </View>
+        </Animated.View>
+        </Animated.View>
+    </Animated.View>
   )
 }
 
@@ -34,23 +32,38 @@ const styles = StyleSheet.create({
         position: 'absolute',
         width: '100%',
         zIndex: 1,
-        paddingHorizontal: 8,
-        paddingTop: 54,
-        paddingBottom: 15,
         height: 202,
         alignItems: 'stretch',
-        justifyContent: 'flex-end',
+        // justifyContent: 'flex-end',
         backgroundColor: '#FFFFFFBF'
 
     },
+    body: {
+        height: 148,
+        // paddingTop: 54,
+        marginTop: 54,
+        paddingBottom: 15,
+        paddingHorizontal: 8,
+        justifyContent: 'space-between'
+    },
     header: {
         height: 44,
+        // marginTop: 54,
         flexDirection: 'row',
         justifyContent: 'space-between',
+        alignItems: "center",
+        backgroundColor: '#fff'
     },
     title: {
+        // transform: [{translateY: 44}],
+        marginTop: 44,
+        paddingTop: 8,
+        paddingHorizontal: 8,
+        height: 58,
+        position: 'absolute',
         fontSize: 34,
-        fontWeight: '700'
+        fontWeight: '700',
+        zIndex: -1,
     },
     searchBar: {
         flexDirection: 'row',

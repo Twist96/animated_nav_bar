@@ -2,31 +2,90 @@ import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-nati
 import React from 'react'
 import { Link, router } from 'expo-router'
 import NavBar from './components/nav_bar'
+import Animated,{
+    interpolate,
+    interpolateColor,
+    useSharedValue,
+    useAnimatedScrollHandler,
+    useAnimatedStyle,
+    Extrapolation
+} from 'react-native-reanimated'
+
+const MIN_HEIGHT = 96;
+const MAX_HEIGHT = 148;
+
+const MIN_HEIGHT2 = 150;
+const MAX_HEIGHT2 = 202;
 
 const HomePage = () => {
-  return (
-    <View>
-        <NavBar />
-        <ScrollView style={styles.content}>
-            {items.map((item, index) => {
-                return(
-                    <Pressable key={index} style={styles.card}>
-                        <Image
-                        alt=''
-                        resizeMode='cover'
-                        source={{uri: item.img}}
-                        style={styles.cardImg}/>
+    const scrollY = useSharedValue(0)
+    const handleScroll = useAnimatedScrollHandler((event) => {
+        scrollY.value = event.contentOffset.y;
+    })
 
-                    </Pressable>
-                )
-            })}
-        </ScrollView>
+    const headerStyle = useAnimatedStyle(() => {
+        const height = MAX_HEIGHT - scrollY.value
+        if (height < MIN_HEIGHT) {
+            return {height: MIN_HEIGHT}
+        } else if (height > MAX_HEIGHT) {
+            return {height: MAX_HEIGHT}
+        } else {
+            return {height}
+        }
+    })
+
+    const navHeight = useAnimatedStyle(() => {
+        const height = MAX_HEIGHT2 - scrollY.value
+        return {height: height < MIN_HEIGHT2 ? MIN_HEIGHT2 : height}
+    })
+
+    const titleOpacity = useAnimatedStyle(() => {
+        const backgroundColor = interpolateColor(
+            scrollY.value,
+            [0, 50],
+            ['transparent', '#fff']
+        )
+        return { backgroundColor }
+    })
+
+    const titleOffset = useAnimatedStyle(() => {
+        const translateY = interpolate(
+            scrollY.value,
+            [0, 80],
+            [0, -45],
+            Extrapolation.CLAMP
+        )
+        return {transform: [{translateY}]}
+    })
+
+    return (
+        <View>
+            <NavBar
+            headerStyle={headerStyle}
+            titleOpacity={titleOpacity} 
+            titleOffset={titleOffset}
+            navHeight={navHeight}/>
+            <Animated.ScrollView onScroll={handleScroll} style={styles.content}>
+                {items.map((item, index) => {
+                    return(
+                        <Pressable key={index} style={styles.card}>
+                            <Image
+                            alt=''
+                            resizeMode='cover'
+                            source={{uri: item.img}}
+                            style={styles.cardImg}/>
+
+                        </Pressable>
+                    )
+                })}
+            </Animated.ScrollView>
     </View>
   )
 }
 
 export default HomePage
 
+const v = StyleSheet.create({})
 
 const styles = StyleSheet.create({
     content: {
