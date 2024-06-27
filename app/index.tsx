@@ -15,8 +15,10 @@ import NavBar2 from './components/nav_bar2'
 const MIN_HEIGHT = 96;
 const MAX_HEIGHT = 148;
 
-const MIN_HEIGHT2 = 150;
+const MIN_HEIGHT2 = 98;
 const MAX_HEIGHT2 = 202;
+
+const MAX_SEARCH_BAR_HEIGHT = 36;
 
 const HomePage = () => {
     const scrollY = useSharedValue(0)
@@ -36,26 +38,37 @@ const HomePage = () => {
         }
     })
 
+    const hideSearchBar = useAnimatedStyle(() =>  {
+        const height = MAX_SEARCH_BAR_HEIGHT - scrollY.value
+        if (height >= MAX_SEARCH_BAR_HEIGHT) {
+            return {height: MAX_SEARCH_BAR_HEIGHT}
+        } else if (height < 0) {
+            return {height: 0}
+        } else {
+            return {height}
+        }
+    })
+
     const navHeight = useAnimatedStyle(() => {
         const height = MAX_HEIGHT2 - scrollY.value
         return {height: height < MIN_HEIGHT2 ? MIN_HEIGHT2 : height}
     })
 
     const show = useAnimatedStyle(() => {
-        const height = MAX_HEIGHT2 - scrollY.value
+        const height = (MAX_HEIGHT2 - 20) - scrollY.value
         return { opacity: height < MIN_HEIGHT ? 0 : 1  }
     })
 
     const hide = useAnimatedStyle(() => {
-        const height = MAX_HEIGHT2 - scrollY.value
+        const height = (MAX_HEIGHT2 - 18) - scrollY.value
         return { opacity: height > MIN_HEIGHT ? 0 : 1  }
     })
 
     const titleOffset = useAnimatedStyle(() => {
         const translateY = interpolate(
             scrollY.value,
-            [0, 80],
-            [0, -45],
+            [48, 80],
+            [0, -48],
             Extrapolation.CLAMP
         )
         return {transform: [{translateY}]}
@@ -63,14 +76,13 @@ const HomePage = () => {
 
     return (
         <View>
-            {/* <NavBar
-            headerStyle={headerStyle}
-            show={show} 
-            hide={hide}
+            <NavBar2
+            navHeight={navHeight} 
+            hideSearchBar={hideSearchBar} 
             titleOffset={titleOffset}
-            navHeight={navHeight}
-            /> */}
-            <NavBar2 navHeight={navHeight} />
+            show={show}
+            hide={hide}
+            />
             <Animated.ScrollView onScroll={handleScroll} style={styles.content}>
                 {items.map((item, index) => {
                     return(

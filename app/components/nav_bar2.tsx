@@ -5,20 +5,20 @@ import { BlurView } from 'expo-blur';
 import { FontAwesome } from '@expo/vector-icons';
 import Animated from 'react-native-reanimated';
 
-const NavBar2 = ({navHeight}) => {
+const NavBar2 = ({navHeight, hideSearchBar, titleOffset, show, hide}) => {
   return (
     <Animated.View style={[styles.container, navHeight]}>
         <BlurView intensity={80} style={styles.absolute} />
         <View style={styles.header}>
             <View style={styles.controls}>
                 <AntDesign name="arrowleft" size={24} color="black" />
-                <Text>nav_bar2</Text>
+                <Animated.Text style={[hide]}>Settings</Animated.Text>
                 <AntDesign name="setting" size={24} color="black" />
             </View>
         </View>
-        <View>
-            <Text style={styles.title}>Settings</Text>
-            <Animated.View style={[styles.searchBar]}>
+        <View style={{zIndex: 0}}>
+            <Animated.Text style={[styles.title, titleOffset, show]}>Settings</Animated.Text>
+            <Animated.View style={[styles.searchBar, hideSearchBar]}>
                 <AntDesign name="search1" size={14} color="black" />
                 <TextInput placeholder='Search' style={styles.textInput}/>
                 <FontAwesome name="microphone" size={14} color="black" />
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
         zIndex: 2,
         paddingBottom: 15,
         justifyContent: "space-between",
-        height: 202
+        height: 202,
     },
     absolute: {
         position: 'absolute',
@@ -49,7 +49,8 @@ const styles = StyleSheet.create({
     header: {
         height: 98,
         justifyContent: 'flex-end',
-        backgroundColor: "red"
+        backgroundColor: '#FFFFFFBF',
+        zIndex: 1
     },
     controls: {
         height: 44,
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
         fontSize: 34,
         fontWeight: '700',
         justifyContent: 'center',
-        // zIndex: -1,
+        zIndex: 0,
     },
     miniTitle: {
         fontSize: 17,
@@ -78,8 +79,9 @@ const styles = StyleSheet.create({
         marginHorizontal: 16,
         paddingHorizontal: 8,
         borderRadius: 10,
-        backgroundColor: '#7676801F'
-
+        backgroundColor: '#7676801F',
+        minHeight: 0,
+        overflow: 'hidden'
     },
     textInput: {
         flex: 1,
