@@ -10,6 +10,7 @@ import Animated,{
     useAnimatedStyle,
     Extrapolation
 } from 'react-native-reanimated'
+import NavBar2 from './components/nav_bar2'
 
 const MIN_HEIGHT = 96;
 const MAX_HEIGHT = 148;
@@ -62,13 +63,14 @@ const HomePage = () => {
 
     return (
         <View>
-            <NavBar
+            {/* <NavBar
             headerStyle={headerStyle}
             show={show} 
             hide={hide}
             titleOffset={titleOffset}
             navHeight={navHeight}
-            />
+            /> */}
+            <NavBar2 navHeight={navHeight} />
             <Animated.ScrollView onScroll={handleScroll} style={styles.content}>
                 {items.map((item, index) => {
                     return(
