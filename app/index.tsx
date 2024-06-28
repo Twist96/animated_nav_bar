@@ -2,7 +2,7 @@ import { Image, ListRenderItem, Pressable, StyleSheet, View, Text, FlatList } fr
 import React from 'react'
 import NavbarScrollView from './components/NavbarScrollView'
 import {contacts} from './data/contacts';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import { router } from 'expo-router';
 
 
 
@@ -10,11 +10,10 @@ const HomePage = () => {
     return (
         <NavbarScrollView
         title='Settings' 
-        hideBackBtn={false} 
-        trailing={<AntDesign name="setting" size={24} color="black" />}>
+        hideBackBtn={true}>
             {contacts.map((item, index) => {
                 return(
-                    <Pressable key={index} >
+                    <Pressable key={index} onPress={() => {router.push(`/users/${item.id}`)}} >
                         <View style={styles.contactItem}>
                         <Text style={styles.name}>{item.name}</Text>
                         {item.phone && <Text style={styles.phone}>{item.phone}</Text>}
@@ -53,18 +52,4 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#555',
     }
-    
-    // card: {
-    //     flexDirection: 'row',
-    //     alignItems: 'stretch',
-    //     borderRadius: 12,
-    //     marginBottom: 16,
-    //     backgroundColor: '#fff',
-    // },
-
-    // cardImg: {
-    //     width: 120,
-    //     height: 154,
-    //     borderRadius: 12,
-    //   },
 })

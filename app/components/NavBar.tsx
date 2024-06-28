@@ -1,9 +1,10 @@
 import React, { ReactElement } from 'react'
-import { StyleSheet, Text, TextInput, View } from 'react-native'
+import { StyleSheet, Text, TextInput, View, Pressable } from 'react-native'
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { BlurView } from 'expo-blur';
 import { FontAwesome } from '@expo/vector-icons';
 import Animated, { Extrapolation, SharedValue, interpolate, useAnimatedStyle } from 'react-native-reanimated';
+import { router } from 'expo-router';
 
 
 const MIN_HEIGHT = 98;
@@ -54,13 +55,17 @@ const NavBar = ({title, hideBackBtn, trailing, scrollOffset}: Props) => {
         const height = (MAX_HEIGHT - 20) - scrollOffset.value
         return { opacity: height < MIN_HEIGHT ? 0 : 1  }
     })
+
+    const backButton = <Pressable onPress={() => {router.back()}}>
+        <AntDesign name="arrowleft" size={24} color="black" />
+    </Pressable>
     
   return (
     <Animated.View style={[styles.container, navHeight]}>
         <BlurView intensity={80} style={styles.absolute} />
         <View style={styles.header}>
             <View style={styles.controls}>
-                {!hideBackBtn ? <AntDesign name="arrowleft" size={24} color="black" /> : <View/>}
+                {!hideBackBtn ? backButton : <View/>}
                 <Animated.Text style={[styles.miniTitle, hide]}>{title}</Animated.Text>
                 {trailing !== undefined ? trailing : <View />}
             </View>
