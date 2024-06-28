@@ -1,30 +1,28 @@
-import { Image, Pressable, StyleSheet, View } from 'react-native'
+import { Image, Pressable, StyleSheet, } from 'react-native'
 import React from 'react'
-import Animated,{useScrollViewOffset, useAnimatedRef} from 'react-native-reanimated'
-import NavBar from './components/nav_bar'
+import NavbarScrollView from './components/NavbarScrollView'
+import { items } from './data'
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 const HomePage = () => {
-    const animatedRef = useAnimatedRef<Animated.ScrollView>()
-    const scrollOffset = useScrollViewOffset(animatedRef);
-
     return (
-        <View>
-            <NavBar scrollOffset={scrollOffset}/>
-            <Animated.ScrollView style={styles.content} ref={animatedRef}>
-                {items.map((item, index) => {
-                    return(
-                        <Pressable key={index} style={styles.card}>
-                            <Image
-                            alt=''
-                            resizeMode='cover'
-                            source={{uri: item.img}}
-                            style={styles.cardImg}/>
-
-                        </Pressable>
-                    )
-                })}
-            </Animated.ScrollView>
-    </View>
+        <NavbarScrollView
+        title='Settings' 
+        hideBackBtn={false} 
+        trailing={<AntDesign name="setting" size={24} color="black" />}>
+            {items.map((item, index) => {
+                return(
+                    <Pressable key={index} style={styles.card}>
+                        <Image
+                        alt=''
+                        resizeMode='cover'
+                        source={{uri: item.img}}
+                        style={styles.cardImg}/>
+                    </Pressable>)
+                    }
+                )
+            }
+        </NavbarScrollView>
   )
 }
 
@@ -53,79 +51,3 @@ const styles = StyleSheet.create({
         borderRadius: 12,
       },
 })
-
-const items = [
-    {
-      img: 'https://images.unsplash.com/photo-1518684079-3c830dcef090?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80',
-      name: 'Dubai',
-      airport: 'DXB',
-      departure: '2022-10-10',
-      arrival: '2023-04-01',
-      price: 966,
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=986&q=80',
-      name: 'Italy',
-      airport: 'VCE',
-      departure: '2022-10-10',
-      arrival: '2023-04-01',
-      price: 652,
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1623536167776-922ccb1ff749?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=544&q=80',
-      name: 'Bosnia',
-      airport: 'BNX',
-      departure: '2022-10-10',
-      arrival: '2023-04-01',
-      price: 566,
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1554939437-ecc492c67b78?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80',
-      name: 'Spain',
-      airport: 'BCN',
-      departure: '2022-10-10',
-      arrival: '2023-04-01',
-      price: 602,
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1518684079-3c830dcef090?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80',
-        name: 'Dubai',
-        airport: 'DXB',
-        departure: '2022-10-10',
-        arrival: '2023-04-01',
-        price: 966,
-      },
-      {
-        img: 'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=986&q=80',
-        name: 'Italy',
-        airport: 'VCE',
-        departure: '2022-10-10',
-        arrival: '2023-04-01',
-        price: 652,
-      },
-      {
-        img: 'https://images.unsplash.com/photo-1623536167776-922ccb1ff749?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=544&q=80',
-        name: 'Bosnia',
-        airport: 'BNX',
-        departure: '2022-10-10',
-        arrival: '2023-04-01',
-        price: 566,
-      },
-      {
-        img: 'https://images.unsplash.com/photo-1554939437-ecc492c67b78?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80',
-        name: 'Spain',
-        airport: 'BCN',
-        departure: '2022-10-10',
-        arrival: '2023-04-01',
-        price: 602,
-      },
-  ];
-
-// <Text>Home Page</Text>
-//                 <Link href="/users/1">Go to user 1</Link>
-//                 <Pressable onPress={() => router.push({
-//                     pathname: "/users/[id]",
-//                     params: {id: 2}
-//                 })}>
-//                     <Text>Go to user 2</Text>
-//                 </Pressable>

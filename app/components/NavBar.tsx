@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { StyleSheet, Text, TextInput, View } from 'react-native'
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { BlurView } from 'expo-blur';
@@ -11,11 +11,14 @@ const MAX_HEIGHT = 202;
 const MAX_SEARCH_BAR_HEIGHT = 36;
 
 interface Props {
+    title: string,
+    hideBackBtn?: Boolean,
+    trailing?: ReactElement,
     scrollOffset: SharedValue<number>
 }
 
 
-const NavBar = ({scrollOffset}: Props) => {
+const NavBar = ({title, hideBackBtn, trailing, scrollOffset}: Props) => {
     const hideSearchBar = useAnimatedStyle(() =>  {
         const height = MAX_SEARCH_BAR_HEIGHT - scrollOffset.value
         if (height >= MAX_SEARCH_BAR_HEIGHT) {
@@ -26,7 +29,6 @@ const NavBar = ({scrollOffset}: Props) => {
             return {height}
         }
     })
-
 
     const titleOffset = useAnimatedStyle(() => {
         const translateY = interpolate(
@@ -58,13 +60,13 @@ const NavBar = ({scrollOffset}: Props) => {
         <BlurView intensity={80} style={styles.absolute} />
         <View style={styles.header}>
             <View style={styles.controls}>
-                <AntDesign name="arrowleft" size={24} color="black" />
-                <Animated.Text style={[hide]}>Settings</Animated.Text>
-                <AntDesign name="setting" size={24} color="black" />
+                {!hideBackBtn ? <AntDesign name="arrowleft" size={24} color="black" /> : <View/>}
+                <Animated.Text style={[styles.miniTitle, hide]}>{title}</Animated.Text>
+                {trailing !== undefined ? trailing : <View />}
             </View>
         </View>
         <View style={{zIndex: 0}}>
-            <Animated.Text style={[styles.title, titleOffset, show]}>Settings</Animated.Text>
+            <Animated.Text style={[styles.title, titleOffset, show]}>{title}</Animated.Text>
             <Animated.View style={[styles.searchBar, hideSearchBar]}>
                 <AntDesign name="search1" size={14} color="black" />
                 <TextInput placeholder='Search' style={styles.textInput}/>
@@ -118,7 +120,7 @@ const styles = StyleSheet.create({
     },
     miniTitle: {
         fontSize: 17,
-        fontWeight: 500
+        fontWeight: 600
     },
     searchBar: {
         flexDirection: 'row',
