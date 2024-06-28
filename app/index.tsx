@@ -1,8 +1,10 @@
-import { Image, Pressable, StyleSheet, } from 'react-native'
+import { Image, ListRenderItem, Pressable, StyleSheet, View, Text, FlatList } from 'react-native'
 import React from 'react'
 import NavbarScrollView from './components/NavbarScrollView'
-import { items } from './data'
+import {contacts} from './data/contacts';
 import AntDesign from '@expo/vector-icons/AntDesign';
+
+
 
 const HomePage = () => {
     return (
@@ -10,14 +12,13 @@ const HomePage = () => {
         title='Settings' 
         hideBackBtn={false} 
         trailing={<AntDesign name="setting" size={24} color="black" />}>
-            {items.map((item, index) => {
+            {contacts.map((item, index) => {
                 return(
-                    <Pressable key={index} style={styles.card}>
-                        <Image
-                        alt=''
-                        resizeMode='cover'
-                        source={{uri: item.img}}
-                        style={styles.cardImg}/>
+                    <Pressable key={index} >
+                        <View style={styles.contactItem}>
+                        <Text style={styles.name}>{item.name}</Text>
+                        {item.phone && <Text style={styles.phone}>{item.phone}</Text>}
+                    </View>
                     </Pressable>)
                     }
                 )
@@ -36,18 +37,34 @@ const styles = StyleSheet.create({
         paddingTop: 212,
         backgroundColor: '#fff',
     },
-    
-    card: {
-        flexDirection: 'row',
-        alignItems: 'stretch',
-        borderRadius: 12,
-        marginBottom: 16,
-        backgroundColor: '#fff',
+
+    contactItem: {
+        padding: 15,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
     },
 
-    cardImg: {
-        width: 120,
-        height: 154,
-        borderRadius: 12,
-      },
+    name: {
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+
+    phone: {
+        fontSize: 16,
+        color: '#555',
+    }
+    
+    // card: {
+    //     flexDirection: 'row',
+    //     alignItems: 'stretch',
+    //     borderRadius: 12,
+    //     marginBottom: 16,
+    //     backgroundColor: '#fff',
+    // },
+
+    // cardImg: {
+    //     width: 120,
+    //     height: 154,
+    //     borderRadius: 12,
+    //   },
 })
