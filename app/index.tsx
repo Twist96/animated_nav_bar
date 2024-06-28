@@ -28,8 +28,6 @@ const HomePage = () => {
 
 export default HomePage
 
-const v = StyleSheet.create({})
-
 const styles = StyleSheet.create({
     content: {
         padding: 24,
