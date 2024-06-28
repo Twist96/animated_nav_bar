@@ -1,89 +1,16 @@
-import { Image, Pressable, ScrollView, StyleSheet, Text, View, useAnimatedValue } from 'react-native'
+import { Image, Pressable, StyleSheet, View } from 'react-native'
 import React from 'react'
-import { Link, router } from 'expo-router'
+import Animated,{useScrollViewOffset, useAnimatedRef} from 'react-native-reanimated'
 import NavBar from './components/nav_bar'
-import Animated,{
-    interpolate,
-    interpolateColor,
-    useSharedValue,
-    useAnimatedScrollHandler,
-    useAnimatedStyle,
-    Extrapolation
-} from 'react-native-reanimated'
-import NavBar2 from './components/nav_bar2'
-
-const MIN_HEIGHT = 96;
-const MAX_HEIGHT = 148;
-
-const MIN_HEIGHT2 = 98;
-const MAX_HEIGHT2 = 202;
-
-const MAX_SEARCH_BAR_HEIGHT = 36;
 
 const HomePage = () => {
-    const scrollY = useSharedValue(0)
-    const blurIntencity = useAnimatedValue(0)
-    const handleScroll = useAnimatedScrollHandler((event) => {
-        scrollY.value = event.contentOffset.y;
-    })
-
-    const headerStyle = useAnimatedStyle(() => {
-        const height = MAX_HEIGHT - scrollY.value
-        if (height < MIN_HEIGHT) {
-            return {height: MIN_HEIGHT}
-        } else if (height > MAX_HEIGHT) {
-            return {height: MAX_HEIGHT}
-        } else {
-            return {height}
-        }
-    })
-
-    const hideSearchBar = useAnimatedStyle(() =>  {
-        const height = MAX_SEARCH_BAR_HEIGHT - scrollY.value
-        if (height >= MAX_SEARCH_BAR_HEIGHT) {
-            return {height: MAX_SEARCH_BAR_HEIGHT}
-        } else if (height < 0) {
-            return {height: 0}
-        } else {
-            return {height}
-        }
-    })
-
-    const navHeight = useAnimatedStyle(() => {
-        const height = MAX_HEIGHT2 - scrollY.value
-        return {height: height < MIN_HEIGHT2 ? MIN_HEIGHT2 : height}
-    })
-
-    const show = useAnimatedStyle(() => {
-        const height = (MAX_HEIGHT2 - 20) - scrollY.value
-        return { opacity: height < MIN_HEIGHT ? 0 : 1  }
-    })
-
-    const hide = useAnimatedStyle(() => {
-        const height = (MAX_HEIGHT2 - 18) - scrollY.value
-        return { opacity: height > MIN_HEIGHT ? 0 : 1  }
-    })
-
-    const titleOffset = useAnimatedStyle(() => {
-        const translateY = interpolate(
-            scrollY.value,
-            [48, 80],
-            [0, -48],
-            Extrapolation.CLAMP
-        )
-        return {transform: [{translateY}]}
-    })
+    const animatedRef = useAnimatedRef<Animated.ScrollView>()
+    const scrollOffset = useScrollViewOffset(animatedRef);
 
     return (
         <View>
-            <NavBar2
-            navHeight={navHeight} 
-            hideSearchBar={hideSearchBar} 
-            titleOffset={titleOffset}
-            show={show}
-            hide={hide}
-            />
-            <Animated.ScrollView onScroll={handleScroll} style={styles.content}>
+            <NavBar scrollOffset={scrollOffset}/>
+            <Animated.ScrollView style={styles.content} ref={animatedRef}>
                 {items.map((item, index) => {
                     return(
                         <Pressable key={index} style={styles.card}>
