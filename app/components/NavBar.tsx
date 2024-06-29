@@ -1,15 +1,25 @@
 import React, { ReactElement } from "react";
-import { StyleSheet, Text, TextInput, View, Pressable } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  Pressable,
+  useAnimatedValue,
+} from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { BlurView } from "expo-blur";
 import { FontAwesome } from "@expo/vector-icons";
 import Animated, {
+  Easing,
   Extrapolation,
   SharedValue,
   interpolate,
   useAnimatedStyle,
+  withTiming,
 } from "react-native-reanimated";
 import { router } from "expo-router";
+import { opacity } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
 
 interface Props {
   title: string;
@@ -34,6 +44,14 @@ const NavBar = ({ title, hideBackBtn, trailing, scrollOffset }: Props) => {
     }
   });
 
+  const hideSearchBarContent = useAnimatedStyle(() => {
+    const height = MAX_SEARCH_BAR_HEIGHT - scrollOffset.value;
+    const opacity = height <= MAX_SEARCH_BAR_HEIGHT / 1.5
+      ? withTiming(0, { duration: 50, easing: Easing.in(Easing.ease) })
+      : withTiming(1, { duration: 50, easing: Easing.in(Easing.ease) });
+      return { opacity };
+  });
+
   const titleOffset = useAnimatedStyle(() => {
     const translateY = interpolate(
       scrollOffset.value,
@@ -50,13 +68,19 @@ const NavBar = ({ title, hideBackBtn, trailing, scrollOffset }: Props) => {
   });
 
   const hide = useAnimatedStyle(() => {
-    const height = MAX_HEIGHT - 18 - scrollOffset.value;
-    return { opacity: height > MIN_HEIGHT ? 0 : 1 };
+    const height = (MAX_HEIGHT - 18) - scrollOffset.value;
+    const opacity = height > MIN_HEIGHT
+    ? withTiming(0, {duration: 400, easing: Easing.out(Easing.ease)}) 
+    : withTiming(1, {duration: 400, easing: Easing.in(Easing.ease)})
+    return { opacity };
   });
 
   const show = useAnimatedStyle(() => {
-    const height = MAX_HEIGHT - 20 - scrollOffset.value;
-    return { opacity: height < MIN_HEIGHT ? 0 : 1 };
+    const height = (MAX_HEIGHT - 20) - scrollOffset.value;
+    const opacity = height < MIN_HEIGHT
+    ? withTiming(0, {duration: 400, easing: Easing.out(Easing.ease)}) 
+    : withTiming(1, {duration: 400, easing: Easing.in(Easing.ease)})
+    return { opacity };
   });
 
   const backButton = (
@@ -71,7 +95,7 @@ const NavBar = ({ title, hideBackBtn, trailing, scrollOffset }: Props) => {
 
   return (
     <Animated.View style={[styles.container, navHeight]}>
-      <BlurView intensity={80} style={styles.absolute} />
+      <BlurView intensity={50} style={styles.absolute} />
       <View style={styles.header}>
         <View style={styles.controls}>
           {!hideBackBtn ? backButton : <View />}
@@ -86,9 +110,11 @@ const NavBar = ({ title, hideBackBtn, trailing, scrollOffset }: Props) => {
           {title}
         </Animated.Text>
         <Animated.View style={[styles.searchBar, hideSearchBar]}>
-          <AntDesign name="search1" size={14} color="black" />
-          <TextInput placeholder="Search" style={styles.textInput} />
-          <FontAwesome name="microphone" size={14} color="black" />
+          <Animated.View style={[{flexDirection: "row", alignItems: "center"}, hideSearchBarContent]}>
+            <AntDesign name="search1" size={14} color="black" />
+            <TextInput placeholder="Search" style={styles.textInput} />
+            <FontAwesome name="microphone" size={14} color="black" />
+          </Animated.View>
         </Animated.View>
       </View>
     </Animated.View>
