@@ -1,11 +1,9 @@
 import React, { ReactElement } from "react";
 import {
   StyleSheet,
-  Text,
   TextInput,
   View,
   Pressable,
-  useAnimatedValue,
 } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { BlurView } from "expo-blur";
@@ -25,9 +23,10 @@ interface Props {
   hideBackBtn?: Boolean;
   trailing?: ReactElement;
   scrollOffset: SharedValue<number>;
+  onSearch: (text: string) => void
 }
 
-const NavBar = ({ title, hideBackBtn, trailing, scrollOffset }: Props) => {
+const NavBar = ({ title, hideBackBtn, trailing, scrollOffset, onSearch }: Props) => {
   const MIN_HEIGHT = 98;
   const MAX_HEIGHT = 202;
   const MAX_SEARCH_BAR_HEIGHT = 36;
@@ -122,7 +121,7 @@ const NavBar = ({ title, hideBackBtn, trailing, scrollOffset }: Props) => {
             ]}
           >
             <AntDesign name="search1" size={14} color="black" />
-            <TextInput placeholder="Search" style={styles.textInput} />
+            <TextInput placeholder="Search" style={styles.textInput} onChangeText={onSearch} />
             <FontAwesome name="microphone" size={14} color="black" />
           </Animated.View>
         </Animated.View>
@@ -189,7 +188,8 @@ const styles = StyleSheet.create({
   textInput: {
     flex: 1,
     height: 22,
-    paddingVertical: 16,
+    fontSize: 12,
     paddingHorizontal: 4,
+    color: 'black'
   },
 });

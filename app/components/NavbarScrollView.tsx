@@ -7,16 +7,17 @@ interface Props {
     title: string,
     hideBackBtn?: Boolean,
     trailing?: ReactElement,
-    children: ReactNode
+    children: ReactNode,
+    onSearch: (text: string) => void
 }
 
-const NavbarScrollView = ({title, hideBackBtn = false, trailing, children}: Props) => {
+const NavbarScrollView = ({title, hideBackBtn = false, trailing, children, onSearch}: Props) => {
     const animatedRef = useAnimatedRef<Animated.ScrollView>()
     const scrollOffset = useScrollViewOffset(animatedRef);
 
   return (
     <View>
-        <NavBar title={title} hideBackBtn={hideBackBtn} trailing={trailing} scrollOffset={scrollOffset}/>
+        <NavBar title={title} hideBackBtn={hideBackBtn} trailing={trailing} scrollOffset={scrollOffset} onSearch={onSearch}/>
         <Animated.ScrollView style={styles.content} ref={animatedRef}>
             {children}
         </Animated.ScrollView>
