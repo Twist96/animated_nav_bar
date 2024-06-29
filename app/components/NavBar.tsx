@@ -19,7 +19,6 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { router } from "expo-router";
-import { opacity } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
 
 interface Props {
   title: string;
@@ -46,10 +45,11 @@ const NavBar = ({ title, hideBackBtn, trailing, scrollOffset }: Props) => {
 
   const hideSearchBarContent = useAnimatedStyle(() => {
     const height = MAX_SEARCH_BAR_HEIGHT - scrollOffset.value;
-    const opacity = height <= MAX_SEARCH_BAR_HEIGHT / 1.5
-      ? withTiming(0, { duration: 50, easing: Easing.in(Easing.ease) })
-      : withTiming(1, { duration: 50, easing: Easing.in(Easing.ease) });
-      return { opacity };
+    const opacity =
+      height <= MAX_SEARCH_BAR_HEIGHT / 1.5
+        ? withTiming(0, { duration: 50, easing: Easing.in(Easing.ease) })
+        : withTiming(1, { duration: 50, easing: Easing.in(Easing.ease) });
+    return { opacity };
   });
 
   const titleOffset = useAnimatedStyle(() => {
@@ -68,19 +68,24 @@ const NavBar = ({ title, hideBackBtn, trailing, scrollOffset }: Props) => {
   });
 
   const hide = useAnimatedStyle(() => {
-    const height = (MAX_HEIGHT - 18) - scrollOffset.value;
-    const opacity = height > MIN_HEIGHT
-    ? withTiming(0, {duration: 400, easing: Easing.out(Easing.ease)}) 
-    : withTiming(1, {duration: 400, easing: Easing.in(Easing.ease)})
+    const height = MAX_HEIGHT - 18 - scrollOffset.value;
+    const opacity =
+      height > MIN_HEIGHT
+        ? withTiming(0, { duration: 400, easing: Easing.out(Easing.ease) })
+        : withTiming(1, { duration: 350, easing: Easing.in(Easing.ease) });
     return { opacity };
   });
 
   const show = useAnimatedStyle(() => {
-    const height = (MAX_HEIGHT - 20) - scrollOffset.value;
-    const opacity = height < MIN_HEIGHT
-    ? withTiming(0, {duration: 400, easing: Easing.out(Easing.ease)}) 
-    : withTiming(1, {duration: 400, easing: Easing.in(Easing.ease)})
+    const height = MAX_HEIGHT - 20 - scrollOffset.value;
+    const opacity = height < MIN_HEIGHT ? 0 : 1;
     return { opacity };
+  });
+
+  const headerBackground = useAnimatedStyle(() => {
+    const height = MAX_HEIGHT - 18 - scrollOffset.value;
+    const backgroundColor = height > MIN_HEIGHT ? "#FFFFFF" : "transparent";
+    return { backgroundColor };
   });
 
   const backButton = (
@@ -96,7 +101,7 @@ const NavBar = ({ title, hideBackBtn, trailing, scrollOffset }: Props) => {
   return (
     <Animated.View style={[styles.container, navHeight]}>
       <BlurView intensity={50} style={styles.absolute} />
-      <View style={styles.header}>
+      <Animated.View style={[styles.header, headerBackground]}>
         <View style={styles.controls}>
           {!hideBackBtn ? backButton : <View />}
           <Animated.Text style={[styles.miniTitle, hide]}>
@@ -104,13 +109,18 @@ const NavBar = ({ title, hideBackBtn, trailing, scrollOffset }: Props) => {
           </Animated.Text>
           {trailing !== undefined ? trailing : <View />}
         </View>
-      </View>
+      </Animated.View>
       <View style={{ zIndex: 0 }}>
         <Animated.Text style={[styles.title, titleOffset, show]}>
           {title}
         </Animated.Text>
         <Animated.View style={[styles.searchBar, hideSearchBar]}>
-          <Animated.View style={[{flexDirection: "row", alignItems: "center"}, hideSearchBarContent]}>
+          <Animated.View
+            style={[
+              { flexDirection: "row", alignItems: "center" },
+              hideSearchBarContent,
+            ]}
+          >
             <AntDesign name="search1" size={14} color="black" />
             <TextInput placeholder="Search" style={styles.textInput} />
             <FontAwesome name="microphone" size={14} color="black" />
@@ -142,7 +152,7 @@ const styles = StyleSheet.create({
   header: {
     height: 98,
     justifyContent: "flex-end",
-    backgroundColor: "#FFFFFFBF",
+    backgroundColor: "transparent",
     zIndex: 1,
   },
   controls: {
